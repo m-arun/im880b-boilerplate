@@ -2,6 +2,8 @@
   ******************************************************************************
   * @file      startup_stm32l151xb.s
   * @author    MCD Application Team
+  * @version   21-April-2017
+  * @date      V2.2.1
   * @brief     STM32L151XB Devices vector table for 
   *            Atollic toolchain.
   *            This module performs:

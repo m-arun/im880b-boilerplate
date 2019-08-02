@@ -210,15 +210,15 @@ void RtcInit( void )
         HAL_RTC_Init( &RtcHandle );
 
         // Set Date: Friday 1st of January 2000
-        rtcInit.CalendarDate.Year = 17;
-        rtcInit.CalendarDate.Month = 8;
-        rtcInit.CalendarDate.Date = 16;
+        rtcInit.CalendarDate.Year = 0;
+        rtcInit.CalendarDate.Month = 1;
+        rtcInit.CalendarDate.Date = 1;
         rtcInit.CalendarDate.WeekDay = RTC_WEEKDAY_SATURDAY;
         HAL_RTC_SetDate( &RtcHandle, &rtcInit.CalendarDate, RTC_FORMAT_BIN );
 
         // Set Time: 00:00:00
-        rtcInit.CalendarTime.Hours = 15;
-        rtcInit.CalendarTime.Minutes = 15;
+        rtcInit.CalendarTime.Hours = 0;
+        rtcInit.CalendarTime.Minutes = 0;
         rtcInit.CalendarTime.Seconds = 0;
         rtcInit.CalendarTime.TimeFormat = RTC_HOURFORMAT12_AM;
         rtcInit.CalendarTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;

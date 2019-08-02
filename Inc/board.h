@@ -188,7 +188,7 @@ uint32_t BoardGetBatteryVoltage( void );
  *                               254: fully charged,
  *                               255: Error]
  */
-uint16_t BoardGetBatteryLevel( void );
+uint8_t BoardGetBatteryLevel( void );
 
 /*!
  * Returns a pseudo random seed generated using the MCU Unique ID

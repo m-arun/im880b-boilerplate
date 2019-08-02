@@ -19,8 +19,6 @@ Maintainer: Miguel Luis and Gregory Cristian
 UART_HandleTypeDef UartHandle;
 uint8_t RxData = 0;
 uint8_t TxData = 0;
-uint8_t escSeqCtr = 0;
-
 
 void UartMcuInit( Uart_t *obj, uint8_t uartId, PinNames tx, PinNames rx )
 {
@@ -184,12 +182,10 @@ void HAL_UART_TxCpltCallback( UART_HandleTypeDef *handle )
         HAL_UART_Transmit_IT( &UartHandle, &TxData, 1 );
     }
 
-    if(TxData == 10)
-        {
-
-        	if( Uart1.IrqNotify != NULL )
-        		Uart1.IrqNotify( UART_NOTIFY_TX );
-        }
+    if( Uart1.IrqNotify != NULL )
+    {
+        Uart1.IrqNotify( UART_NOTIFY_TX );
+    }
 }
 
 void HAL_UART_RxCpltCallback( UART_HandleTypeDef *handle )
@@ -200,13 +196,10 @@ void HAL_UART_RxCpltCallback( UART_HandleTypeDef *handle )
         FifoPush( &Uart1.FifoRx, RxData );
     }
 
-    if(RxData == 10)
+    if( Uart1.IrqNotify != NULL )
     {
-    		if( Uart1.IrqNotify != NULL )
-    			Uart1.IrqNotify( UART_NOTIFY_RX );
-
+        Uart1.IrqNotify( UART_NOTIFY_RX );
     }
-
 
     HAL_UART_Receive_IT( &UartHandle, &RxData, 1 );
 }
@@ -220,14 +213,6 @@ void USART1_IRQHandler( void )
 {
     HAL_UART_IRQHandler( &UartHandle );
 }
-
-
-
-void UartReEnableRx(){
-	HAL_UART_Receive_IT( &UartHandle, &RxData, 1 );
-}
-
-
 
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf

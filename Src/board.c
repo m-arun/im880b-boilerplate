@@ -269,13 +269,36 @@ uint32_t BoardGetBatteryVoltage( void )
     return BatteryVoltage;
 }
 
-uint16_t BoardGetBatteryLevel( void )
+uint8_t BoardGetBatteryLevel( void )
 {
     uint8_t batteryLevel = 0;
 
     BatteryVoltage = BoardBatteryMeasureVolage( );
 
-    return BatteryVoltage;
+    if( GetBoardPowerSource( ) == USB_POWER )
+    {
+        batteryLevel = 0;
+    }
+    else
+    {
+        if( BatteryVoltage >= BATTERY_MAX_LEVEL )
+        {
+            batteryLevel = 254;
+        }
+        else if( ( BatteryVoltage > BATTERY_MIN_LEVEL ) && ( BatteryVoltage < BATTERY_MAX_LEVEL ) )
+        {
+            batteryLevel = ( ( 253 * ( BatteryVoltage - BATTERY_MIN_LEVEL ) ) / ( BATTERY_MAX_LEVEL - BATTERY_MIN_LEVEL ) ) + 1;
+        }
+        else if( ( BatteryVoltage > BATTERY_SHUTDOWN_LEVEL ) && ( BatteryVoltage <= BATTERY_MIN_LEVEL ) )
+        {
+            batteryLevel = 1;
+        }
+        else //if( BatteryVoltage <= BATTERY_SHUTDOWN_LEVEL )
+        {
+            batteryLevel = 255;
+        }
+    }
+    return batteryLevel;
 }
 
 static void BoardUnusedIoInit( void )
@@ -408,7 +431,7 @@ void SysTick_Handler( void )
 
 uint8_t GetBoardPowerSource( void )
 {
-    return USB_POWER;
+    return BATTERY_POWER;
 }
 
 #ifdef USE_FULL_ASSERT
@@ -424,8 +447,9 @@ uint8_t GetBoardPowerSource( void )
 void assert_failed( uint8_t* file, uint32_t line )
 {
     /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+     ex: printf("Wrong parameters value: file %s on line %u\r\n", file, line) */
 
+    printf( "Wrong parameters value: file %s on line %u\r\n", ( const char* )file, line );
     /* Infinite loop */
     while( 1 )
     {
